@@ -132,3 +132,6 @@ dmypy.json
 *.zip
 *.rar
 *.bin
+
+# django
+migrations/
