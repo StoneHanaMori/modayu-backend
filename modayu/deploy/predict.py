@@ -7,8 +7,8 @@ saved_models文件夹包含两个文件：
 import torch
 import torch.nn.functional as F
 import numpy as np
-from model import BertForSeq2Seq
-from tokenizer import Tokenizer
+from deploy.model import BertForSeq2Seq
+from deploy.tokenizer import Tokenizer
 
 
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
@@ -81,11 +81,11 @@ def sample_generate(text, model_path, out_max_length=40, top_k=30, top_p=0.0, ma
 
     return Tokenizer.decode(np.array(output_ids))
 
-# TODO:输入
-content = input()
-content = content.replace('\n', '')
-summary = sample_generate(
-    text=content,
-    model_path='./saved_models', top_k=5, top_p=0.95)
-# TODO:输出
-print(summary)
+class ArticleGenerator:
+    def __init__(self, content):
+        self.content = content.replace('\n', '')
+    def generate(self):
+        summary = sample_generate(
+                    text=self.content,
+                    model_path='./saved_models', top_k=5, top_p=0.95)
+        return summary
