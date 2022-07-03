@@ -6,13 +6,13 @@ from deploy.predict import ArticleGenerator
 
 @api_view(['POST'])
 def generate(request):
-    body = request.data.get("content", None)
-    if body is None:
+    content = request.data.get("content", None)
+    if content is None:
         return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
-    abstract = ArticleGenerator(body).generate().replace(" ",'')
-    # abstract = "fake abstract"
+    # summary = ArticleGenerator(content).generate().replace(" ",'')
+    summary = "fake abstract"
     title = "fake title"
     serialize_data = {  "title" : title, 
-                        "body" : body,
-                        "abstract" : abstract}
+                        "content" : content,
+                        "summary" : summary}
     return Response(data=serialize_data, status=status.HTTP_200_OK)
