@@ -489,7 +489,7 @@ class BertPreTrainedModel(nn.Module):
         print("Load Model weights from file: {}".format(weights_path))
         # 实例化模型
         model = cls(config, *inputs, **kwargs)
-        state_dict = torch.load(weights_path)
+        state_dict = torch.load(weights_path, map_location=torch.device('cpu'))
         # 加载state_dict到pytorch模型当中
         old_keys = []
         new_keys = []

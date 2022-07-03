@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import numpy as np
 from deploy.model import BertForSeq2Seq
 from deploy.tokenizer import Tokenizer
-
+from modayu.settings import MODEL
 
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
     """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
@@ -43,11 +43,9 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
 
 def sample_generate(text, model_path, out_max_length=40, top_k=30, top_p=0.0, max_length=512):
-    device = "cuda" if torch.cuda.is_available() else 'cpu'
-
-    model = BertForSeq2Seq.from_pretrained(model_path)
-    model.to(device)
-    model.eval()
+    # device = "cuda" if torch.cuda.is_available() else 'cpu'
+    device = 'cpu'
+    model = MODEL
 
     input_max_length = max_length - out_max_length
     input_ids, token_type_ids, token_type_ids_for_mask, labels = Tokenizer.encode(text, max_length=input_max_length)
@@ -59,7 +57,7 @@ def sample_generate(text, model_path, out_max_length=40, top_k=30, top_p=0.0, ma
     output_ids = []
 
     with torch.no_grad():
-        for step in range(out_max_length):
+        for _ in range(out_max_length):
             scores = model(input_ids, token_type_ids, token_type_ids_for_mask)
             logit_score = torch.log_softmax(scores[:, -1], dim=-1).squeeze(0)
             logit_score[Tokenizer.unk_id] = -float('Inf')
@@ -87,5 +85,5 @@ class ArticleGenerator:
     def generate(self):
         summary = sample_generate(
                     text=self.content,
-                    model_path='./saved_models', top_k=5, top_p=0.95)
+                    model_path='./deploy/saved_models', top_k=5, top_p=0.95)
         return summary
