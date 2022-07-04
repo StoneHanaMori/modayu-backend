@@ -9,8 +9,8 @@ def generate(request):
     content = request.data.get("content", None)
     if content is None:
         return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
-    # summary = ArticleGenerator(content).generate().replace(" ",'')
-    summary = "fake abstract"
+    summary = ArticleGenerator(content).generate().replace(" ",'')
+    # summary = "fake abstract"
     title = "fake title"
     serialize_data = {  "title" : title, 
                         "content" : content,

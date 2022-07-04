@@ -42,7 +42,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
     return logits
 
 
-def sample_generate(text, model_path, out_max_length=40, top_k=30, top_p=0.0, max_length=512):
+def sample_generate(text, model_path, out_max_length=20, top_k=30, top_p=0.0, max_length=512):
     # device = "cuda" if torch.cuda.is_available() else 'cpu'
     device = 'cpu'
     model = MODEL
@@ -85,5 +85,5 @@ class ArticleGenerator:
     def generate(self):
         summary = sample_generate(
                     text=self.content,
-                    model_path='./deploy/saved_models', top_k=5, top_p=0.95)
+                    model_path='./deploy/saved_models', top_k=1, top_p=0.95)
         return summary
