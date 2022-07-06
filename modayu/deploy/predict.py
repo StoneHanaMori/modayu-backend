@@ -11,6 +11,8 @@ from deploy.model import BertForSeq2Seq
 from deploy.tokenizer import Tokenizer
 from modayu.settings import MODEL
 
+from deploy.textrank.textRank import TextRank
+
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
     """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
         Args:
@@ -82,8 +84,23 @@ def sample_generate(text, model_path, out_max_length=20, top_k=30, top_p=0.0, ma
 class ArticleGenerator:
     def __init__(self, content):
         self.content = content.replace('\n', '')
-    def generate(self):
-        summary = sample_generate(
+        self.T = TextRank(self.content, pr_config={'alpha': 0.85, 'max_iter': 100})
+        
+    def generate_title(self):
+        title = sample_generate(
                     text=self.content,
                     model_path='./deploy/saved_models', top_k=1, top_p=0.95)
+        return title
+
+    def generate_summary(self):
+        sum_len = self.T.get_sent_len() // 5
+        sum_output, sum_out_ind = self.T.get_n_sentences(sum_len)
+        result_list = [i for _, i in sorted(zip(sum_out_ind, sum_output))]
+        summary_list = [item[0] for item in result_list]
+        summary = '。'.join(summary_list)+"。"
         return summary
+
+    def generate_keywords(self):
+        word_output = self.T.get_n_keywords(8)
+        keyword_list = [item[0] for item in word_output]
+        return keyword_list
