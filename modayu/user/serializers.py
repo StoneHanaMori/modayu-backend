@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         read_only=True,
-        view_name='user_info:user-detail',
+        view_name='user:user-detail',
         lookup_field='username'
     )
 

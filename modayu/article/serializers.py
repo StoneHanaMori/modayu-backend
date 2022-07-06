@@ -7,6 +7,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
-            'abstract',
-            'body'
+            'summary',
+            'content',
+            'author',
+            'keyword_list'
         ]

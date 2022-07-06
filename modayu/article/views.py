@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from deploy.predict import ArticleGenerator
+from article.models import Article
 # Create your views here.
 
 @api_view(['POST'])
@@ -21,3 +22,16 @@ def generate(request):
                         "summary" : summary,
                         "keyword_list" : keyword_list}
     return Response(data=serialize_data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def collect(request):
+    if not (request.user and request.user.is_authenticated):
+        return Response(data={"detail: 未登录"}, status=status.HTTP_200_OK)
+    content = request.data.get("content", None)
+    title = request.data.get("content", None)
+    summary = request.data.get("summary", None)
+    keyword_list = request.data.get("keyword_list", None)
+    Article.create()
+
+    return Response(status=status.HTTP_200_OK)
+

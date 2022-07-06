@@ -44,10 +44,9 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
     return logits
 
 
-def sample_generate(text, model_path, out_max_length=20, top_k=30, top_p=0.0, max_length=512):
+def sample_generate(text, model_path, model=MODEL, device = 'cpu', out_max_length=20, top_k=30, top_p=0.0, max_length=512):
     # device = "cuda" if torch.cuda.is_available() else 'cpu'
-    device = 'cpu'
-    model = MODEL
+    # device = 'cpu'
 
     input_max_length = max_length - out_max_length
     input_ids, token_type_ids, token_type_ids_for_mask, labels = Tokenizer.encode(text, max_length=input_max_length)

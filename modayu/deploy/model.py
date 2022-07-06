@@ -12,7 +12,7 @@ from torch.nn import CrossEntropyLoss
 logger = logging.getLogger(__name__)
 
 CONFIG_NAME = 'config.json'
-WEIGHTS_NAME = 'saved_model.bin'
+WEIGHTS_NAME = 'saved_model3.bin'
 device = "cuda" if torch.cuda.is_available() else 'cpu'
 
 
