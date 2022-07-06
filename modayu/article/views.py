@@ -10,8 +10,8 @@ def generate(request):
     if content is None:
         return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
     articleGenerator = ArticleGenerator(content)
-    # title = articleGenerator.generate_title().replace(" ",'')
-    title = "fake title"
+    title = articleGenerator.generate_title().replace(" ",'')
+    # title = "fake title"
     summary = articleGenerator.generate_summary()
     keyword_list = articleGenerator.generate_keywords()
     
