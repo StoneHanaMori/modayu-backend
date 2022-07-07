@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     
+    'django_mysql',
     'rest_framework',
     'article',
     'user'
@@ -142,21 +143,21 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-POLICY_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_policy.bin")
-POLICY_MODEL.to('cpu')
-POLICY_MODEL.eval()
+# POLICY_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_policy.bin")
+# POLICY_MODEL.to('cpu')
+# POLICY_MODEL.eval()
 
-CSL_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_csl.bin")
-CSL_MODEL.to('cpu')
-CSL_MODEL.eval()
+# CSL_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_csl.bin")
+# CSL_MODEL.to('cpu')
+# CSL_MODEL.eval()
 
-NLPCC_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_nlpcc.bin")
-NLPCC_MODEL.to('cpu')
-NLPCC_MODEL.eval()
+# NLPCC_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_nlpcc.bin")
+# NLPCC_MODEL.to('cpu')
+# NLPCC_MODEL.eval()
 
-WEIXIN_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_weixin.bin")
-WEIXIN_MODEL.to('cpu')
-WEIXIN_MODEL.eval()
+# WEIXIN_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_weixin.bin")
+# WEIXIN_MODEL.to('cpu')
+# WEIXIN_MODEL.eval()
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

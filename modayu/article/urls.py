@@ -8,5 +8,5 @@ router = DefaultRouter()
 router.register(r'', ArticleViewSet)
 urlpatterns = [
     path('generate', views.generate, name='generate'),
-    # path('', include(router.urls))
+    path('', include(router.urls))
 ]

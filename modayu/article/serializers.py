@@ -1,7 +1,11 @@
 from rest_framework import serializers
 from article.models import Article
+from rest_framework.serializers import SerializerMethodField
+import json
 
 class ArticleSerializer(serializers.ModelSerializer):
+    keywords = SerializerMethodField()
+
     class Meta:
         model = Article
         fields = [
@@ -10,5 +14,11 @@ class ArticleSerializer(serializers.ModelSerializer):
             'summary',
             'content',
             'author',
-            'keyword_list'
+            'keywords',
+            'created'
         ]
+    
+    def get_keywords(self, instance):
+        if instance.keywords != "" : 
+            return json.loads(instance.keywords)
+        return []

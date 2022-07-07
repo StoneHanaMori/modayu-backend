@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from deploy.predict import ArticleGenerator
 from article.models import Article
 from article.serializers import ArticleSerializer
+import json
 # Create your views here.
 
 @api_view(['POST'])
@@ -17,15 +18,15 @@ def generate(request):
         model_type = "policy"
 
     articleGenerator = ArticleGenerator(content)
-    title = articleGenerator.generate_title(model_type).replace(" ",'')
+    # title = articleGenerator.generate_title(model_type).replace(" ",'')
+    title = "fake title"
     summary = articleGenerator.generate_summary()
-    keyword_list = articleGenerator.generate_keywords()
+    keywords = articleGenerator.generate_keywords()
     
-    # title = "fake title"
     serialize_data = {  "title" : title, 
                         "content" : content,
                         "summary" : summary,
-                        "keyword_list" : keyword_list}
+                        "keywords" : keywords}
     return Response(data=serialize_data, status=status.HTTP_200_OK)
 
 
@@ -52,5 +53,17 @@ class ArticleViewSet(viewsets.ModelViewSet):
         queryset = queryset.filter(Q(author=user)).order_by('-created')
         return super().filter_queryset(queryset)
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        keywords = data.get("keywords", None)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         serializer.save(author=self.request.user)
+        if keywords is not None:
+            keywords = json.dumps(keywords)
+            serializer.save(keywords=keywords)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+

@@ -1,7 +1,9 @@
 from django.db import models
+from django.forms import CharField
 from django.utils import timezone
 from django.contrib.auth.models import User
-import json
+from django_mysql.models import ListCharField
+
 
 # Create your models here.
 class Article(models.Model):
@@ -9,7 +11,7 @@ class Article(models.Model):
     content = models.TextField(verbose_name="文章内容")
     summary = models.TextField(blank=True, verbose_name="摘要")
     created = models.DateTimeField(default=timezone.now)
-    keyword_list = models.TextField(blank=True)
+    keywords = models.TextField(blank=True, verbose_name="关键词")
     updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(
         User,

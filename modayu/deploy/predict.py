@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import numpy as np
 from deploy.model import BertForSeq2Seq
 from deploy.tokenizer import Tokenizer
-from modayu.settings import POLICY_MODEL, CSL_MODEL, NLPCC_MODEL , WEIXIN_MODEL
+# from modayu.settings import POLICY_MODEL, CSL_MODEL, NLPCC_MODEL , WEIXIN_MODEL
 
 from deploy.textrank.textRank import TextRank
 
@@ -47,14 +47,15 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 def sample_generate(text, model_path, model_type="policy", device = 'cpu', out_max_length=20, top_k=30, top_p=0.0, max_length=512):
     # device = "cuda" if torch.cuda.is_available() else 'cpu'
     # device = 'cpu'
-    if model_type == "policy":
-        model = POLICY_MODEL
-    elif model_type == "weixin":
-        model = WEIXIN_MODEL
-    elif model_type == "nlpcc":
-        model = NLPCC_MODEL
-    elif model_type == "csl":
-        model = CSL_MODEL
+    model = POLICY_MODEL
+    # if model_type == "policy":
+    #     model = POLICY_MODEL
+    # elif model_type == "weixin":
+    #     model = WEIXIN_MODEL
+    # elif model_type == "nlpcc":
+    #     model = NLPCC_MODEL
+    # elif model_type == "csl":
+    #     model = CSL_MODEL
 
     input_max_length = max_length - out_max_length
     input_ids, token_type_ids, token_type_ids_for_mask, labels = Tokenizer.encode(text, max_length=input_max_length)
@@ -105,6 +106,8 @@ class ArticleGenerator:
         sum_output, sum_out_ind = self.T.get_n_sentences(sum_len)
         result_list = [i for _, i in sorted(zip(sum_out_ind, sum_output))]
         summary_list = [item[0] for item in result_list]
+        if len(summary_list) == 0:
+            return ""
         summary = '。'.join(summary_list)+"。"
         return summary
 
