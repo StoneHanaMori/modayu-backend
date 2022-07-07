@@ -12,7 +12,7 @@ from torch.nn import CrossEntropyLoss
 logger = logging.getLogger(__name__)
 
 CONFIG_NAME = 'config.json'
-WEIGHTS_NAME = 'saved_model3.bin'
+WEIGHTS_NAME = 'pretrain_model_weixin.bin'
 device = "cuda" if torch.cuda.is_available() else 'cpu'
 
 
@@ -474,7 +474,7 @@ class BertPreTrainedModel(nn.Module):
             module.bias.data.zero_()
 
     @classmethod
-    def from_pretrained(cls, pretrained_model_path, *inputs, **kwargs):
+    def from_pretrained(cls, pretrained_model_path, weights_name, *inputs, **kwargs):
         """
             参数
                 pretrained_model_path:
@@ -485,7 +485,7 @@ class BertPreTrainedModel(nn.Module):
         config_file = os.path.join(pretrained_model_path, CONFIG_NAME)
         config = BertConfig.from_json_file(config_file)
         print("Load Model config from file: {}".format(config_file))
-        weights_path = os.path.join(pretrained_model_path, WEIGHTS_NAME)
+        weights_path = os.path.join(pretrained_model_path, weights_name)
         print("Load Model weights from file: {}".format(weights_path))
         # 实例化模型
         model = cls(config, *inputs, **kwargs)
