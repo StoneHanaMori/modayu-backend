@@ -95,14 +95,27 @@ class ArticleGenerator:
         self.T = TextRank(self.content, pr_config={'alpha': 0.85, 'max_iter': 100})
         
     def generate_title(self, model_type):
-        title = sample_generate(
-                    text=self.content,
-                    model_type=model_type,
-                    model_path='./deploy/saved_models', top_k=1, top_p=0.95)
+        title = "fake title"
+        group = ["policy", "weixin", "nlpcc", "csl"]
+        if model_type is None or model_type not in group:
+            model_type = "policy"
+        if model_type == "policy":
+            title += " policy"
+        elif model_type == "weixin":
+            title += " weixin"
+        elif model_type == "nlpcc":
+            title += " nlpcc"
+        elif model_type == "csl":
+            title += " csl"
+        # title = sample_generate(
+        #             text=self.content,
+        #             model_type=model_type,
+        #             model_path='./deploy/saved_models', top_k=1, top_p=0.95)
         return title
 
     def generate_summary(self):
-        sum_len = self.T.get_sent_len() // 5
+        sum_len = self.T.get_sent_len() // 4
+        sum_len = max(1, sum_len)
         sum_output, sum_out_ind = self.T.get_n_sentences(sum_len)
         result_list = [i for _, i in sorted(zip(sum_out_ind, sum_output))]
         summary_list = [item[0] for item in result_list]

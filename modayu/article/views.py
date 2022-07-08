@@ -14,12 +14,8 @@ def generate(request):
     model_type = request.data.get("model_type", None)
     if content is None:
         return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
-    if model_type is None:
-        model_type = "policy"
-
     articleGenerator = ArticleGenerator(content)
-    # title = articleGenerator.generate_title(model_type).replace(" ",'')
-    title = "fake title"
+    title = articleGenerator.generate_title(model_type).replace(" ",'')
     summary = articleGenerator.generate_summary()
     keywords = articleGenerator.generate_keywords()
     
