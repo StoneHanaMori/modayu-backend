@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import numpy as np
 from deploy.model import BertForSeq2Seq
 from deploy.tokenizer import Tokenizer
-# from modayu.settings import POLICY_MODEL, CSL_MODEL, NLPCC_MODEL , WEIXIN_MODEL
+from modayu.settings import POLICY_MODEL, CSL_MODEL, NLPCC_MODEL , WEIXIN_MODEL
 
 from deploy.textrank.textRank import TextRank
 
@@ -47,15 +47,15 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 def sample_generate(text, model_path, model_type="policy", device = 'cpu', out_max_length=20, top_k=30, top_p=0.0, max_length=512):
     # device = "cuda" if torch.cuda.is_available() else 'cpu'
     # device = 'cpu'
-    model = POLICY_MODEL
-    # if model_type == "policy":
-    #     model = POLICY_MODEL
-    # elif model_type == "weixin":
-    #     model = WEIXIN_MODEL
-    # elif model_type == "nlpcc":
-    #     model = NLPCC_MODEL
-    # elif model_type == "csl":
-    #     model = CSL_MODEL
+    # model = POLICY_MODEL
+    if model_type == "policy":
+        model = POLICY_MODEL
+    elif model_type == "weixin":
+        model = WEIXIN_MODEL
+    elif model_type == "nlpcc":
+        model = NLPCC_MODEL
+    elif model_type == "csl":
+        model = CSL_MODEL
 
     input_max_length = max_length - out_max_length
     input_ids, token_type_ids, token_type_ids_for_mask, labels = Tokenizer.encode(text, max_length=input_max_length)
@@ -99,18 +99,18 @@ class ArticleGenerator:
         group = ["policy", "weixin", "nlpcc", "csl"]
         if model_type is None or model_type not in group:
             model_type = "policy"
-        if model_type == "policy":
-            title += " policy"
-        elif model_type == "weixin":
-            title += " weixin"
-        elif model_type == "nlpcc":
-            title += " nlpcc"
-        elif model_type == "csl":
-            title += " csl"
-        # title = sample_generate(
-        #             text=self.content,
-        #             model_type=model_type,
-        #             model_path='./deploy/saved_models', top_k=1, top_p=0.95)
+        # if model_type == "policy":
+        #     title += " policy"
+        # elif model_type == "weixin":
+        #     title += " weixin"
+        # elif model_type == "nlpcc":
+        #     title += " nlpcc"
+        # elif model_type == "csl":
+        #     title += " csl"
+        title = sample_generate(
+                    text=self.content,
+                    model_type=model_type,
+                    model_path='./deploy/saved_models', top_k=1, top_p=0.95)
         return title
 
     def generate_summary(self):
