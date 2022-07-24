@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from deploy.model import BertForSeq2Seq
+import onnxruntime
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -143,21 +144,41 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-POLICY_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_policy.bin")
-POLICY_MODEL.to('cpu')
-POLICY_MODEL.eval()
 
-CSL_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_csl.bin")
-CSL_MODEL.to('cpu')
-CSL_MODEL.eval()
+sess_options = onnxruntime.SessionOptions()
+sess_options.intra_op_num_threads = 4
+sess_options.inter_op_num_threads = 4
 
-NLPCC_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_nlpcc.bin")
-NLPCC_MODEL.to('cpu')
-NLPCC_MODEL.eval()
 
-WEIXIN_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_weixin.bin")
-WEIXIN_MODEL.to('cpu')
-WEIXIN_MODEL.eval()
+
+print("Policy Model initializing......")
+POLICY_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_policy.onnx', sess_options, providers=['CPUExecutionProvider'])
+print("Policy Model initialized.")
+
+print("Csl Model initializing......")
+CSL_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_csl.onnx', sess_options, providers=['CPUExecutionProvider'])
+print("Csl Model initialized.")
+
+print("Nlpcc Model initializing......")
+NLPCC_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_nlpcc.onnx', sess_options, providers=['CPUExecutionProvider'])
+print("Nlpcc Model initialized.")
+
+print("Weixin Model initializing......")
+WEIXIN_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_weixin.onnx', sess_options, providers=['CPUExecutionProvider'])
+print("Weixin Model initialized.")
+# POLICY_MODEL.to('cpu')
+# POLICY_MODEL.eval()
+
+# CSL_MODEL.to('cpu')
+# CSL_MODEL.eval()
+
+# NLPCC_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_nlpcc.bin")
+# NLPCC_MODEL.to('cpu')
+# NLPCC_MODEL.eval()
+
+# WEIXIN_MODEL = BertForSeq2Seq.from_pretrained('./deploy/saved_models', weights_name="pretrain_model_weixin.bin")
+# WEIXIN_MODEL.to('cpu')
+# WEIXIN_MODEL.eval()
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

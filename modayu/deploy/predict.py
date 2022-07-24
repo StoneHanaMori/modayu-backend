@@ -68,7 +68,13 @@ def sample_generate(text, model_path, model_type="policy", device = 'cpu', out_m
 
     with torch.no_grad():
         for _ in range(out_max_length):
-            scores = model(input_ids, token_type_ids, token_type_ids_for_mask)
+            ort_inputs = {
+                        "input_ids": input_ids.numpy(),
+                        "token_type_ids_for_mask": token_type_ids.numpy(),
+                        "token_type_ids": token_type_ids_for_mask.numpy(),}
+            scores = model.run(None, ort_inputs)
+            scores = torch.tensor(scores[0])
+            # scores = model(input_ids, token_type_ids, token_type_ids_for_mask)
             logit_score = torch.log_softmax(scores[:, -1], dim=-1).squeeze(0)
             logit_score[Tokenizer.unk_id] = -float('Inf')
 
@@ -99,14 +105,6 @@ class ArticleGenerator:
         group = ["policy", "weixin", "nlpcc", "csl"]
         if model_type is None or model_type not in group:
             model_type = "policy"
-        # if model_type == "policy":
-        #     title += " policy"
-        # elif model_type == "weixin":
-        #     title += " weixin"
-        # elif model_type == "nlpcc":
-        #     title += " nlpcc"
-        # elif model_type == "csl":
-        #     title += " csl"
         title = sample_generate(
                     text=self.content,
                     model_type=model_type,

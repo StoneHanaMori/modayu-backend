@@ -137,3 +137,5 @@ dmypy.json
 migrations/
 nohup.out
 dev.json
+*.onnx
+*.ipynb
