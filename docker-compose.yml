@@ -4,12 +4,12 @@ version: "3"
 services:
   web:
     build: ./modayu
-    # command: ls /usr/local/
-    command: python3 manage.py runserver 0.0.0.0:8090
+    command: gunicorn modayu.wsgi:application -c gunicorn.ini.py
     ports:
       - "8090:8090"
     volumes:
       - ./modayu:/app
+      - ./compose/gunicorn:/tmp # 挂载uwsgi日志
     depends_on:
       - db
     # runtime: nvidia
@@ -31,6 +31,7 @@ services:
     volumes:
       - ./compose/mysql/data:/var/lib/mysql # 挂载数据库数据, 可读可写
       - ./compose/mysql/conf/my.cnf:/etc/mysql/my.cnf # 挂载配置文件
+
 
     ports:
        - "3306:3306"
