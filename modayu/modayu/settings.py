@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from deploy.model import BertForSeq2Seq
 import onnxruntime
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,19 +80,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'modayu.wsgi.application'
 
 
+
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+import pymysql  
+pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'modayu',
-        'USER': 'root',
+        'USER': 'modayu',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
             'autocommit': True,
+            'charset':'utf8mb4'
         },
     }
 }
@@ -122,7 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
+
 
 USE_I18N = True
 
@@ -146,25 +153,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 sess_options = onnxruntime.SessionOptions()
-sess_options.intra_op_num_threads = 4
-sess_options.inter_op_num_threads = 4
+# sess_options.intra_op_num_threads = 4
+# sess_options.inter_op_num_threads = 4
+sess_options.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
 
 
 
 print("Policy Model initializing......")
-POLICY_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_policy.onnx', sess_options, providers=['CPUExecutionProvider'])
+POLICY_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_policy.onnx', sess_options, providers=['CUDAExecutionProvider'])
 print("Policy Model initialized.")
 
 print("Csl Model initializing......")
-CSL_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_csl.onnx', sess_options, providers=['CPUExecutionProvider'])
+CSL_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_csl.onnx', sess_options, providers=['CUDAExecutionProvider'])
 print("Csl Model initialized.")
 
 print("Nlpcc Model initializing......")
-NLPCC_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_nlpcc.onnx', sess_options, providers=['CPUExecutionProvider'])
+NLPCC_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_nlpcc.onnx', sess_options, providers=['CUDAExecutionProvider'])
 print("Nlpcc Model initialized.")
 
 print("Weixin Model initializing......")
-WEIXIN_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_weixin.onnx', sess_options, providers=['CPUExecutionProvider'])
+WEIXIN_MODEL = onnxruntime.InferenceSession('./deploy/saved_models/optimized_onnx_weixin.onnx', sess_options, providers=['CUDAExecutionProvider'])
 print("Weixin Model initialized.")
 # POLICY_MODEL.to('cpu')
 # POLICY_MODEL.eval()

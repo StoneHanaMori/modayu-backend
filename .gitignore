@@ -139,3 +139,4 @@ nohup.out
 dev.json
 *.onnx
 *.ipynb
+compose/mysql/data

@@ -70,8 +70,8 @@ def sample_generate(text, model_path, model_type="policy", device = 'cpu', out_m
         for _ in range(out_max_length):
             ort_inputs = {
                         "input_ids": input_ids.numpy(),
-                        "token_type_ids_for_mask": token_type_ids.numpy(),
-                        "token_type_ids": token_type_ids_for_mask.numpy(),}
+                        "token_type_ids_for_mask": token_type_ids_for_mask.numpy(),
+                        "token_type_ids": token_type_ids.numpy(),}
             scores = model.run(None, ort_inputs)
             scores = torch.tensor(scores[0])
             # scores = model(input_ids, token_type_ids, token_type_ids_for_mask)
