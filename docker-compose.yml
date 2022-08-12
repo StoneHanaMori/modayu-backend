@@ -1,0 +1,20 @@
+version: "3"
+
+
+services:
+  db:
+    image: mysql:8.0.28
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456 # 数据库密码
+      - MYSQL_DATABASE=modayu # 数据库名称
+      - MYSQL_USER=modayu # 数据库用户名
+      - MYSQL_PASSWORD=123456 # 用户密码
+
+    volumes:
+      - ./compose/mysql/data:/var/lib/mysql # 挂载数据库数据, 可读可写
+      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.cnf # 挂载配置文件
+
+    ports:
+       - "3306:3306"
+
+    restart: always
