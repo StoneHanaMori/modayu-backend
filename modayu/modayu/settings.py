@@ -84,8 +84,8 @@ WSGI_APPLICATION = 'modayu.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-import pymysql  
-pymysql.install_as_MySQLdb()
+# import pymysql  
+# pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'modayu',
         'USER': 'modayu',
         'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '3306',
         'OPTIONS': {
             'autocommit': True,

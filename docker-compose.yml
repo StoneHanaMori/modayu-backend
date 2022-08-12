@@ -2,6 +2,24 @@ version: "3"
 
 
 services:
+  web:
+    build: ./modayu
+    # command: ls /usr/local/
+    command: python3 manage.py runserver 0.0.0.0:8090
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./modayu:/app
+    depends_on:
+      - db
+    # runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              count: "all"
+              capabilities: [gpu]
   db:
     image: mysql:8.0.28
     environment:
