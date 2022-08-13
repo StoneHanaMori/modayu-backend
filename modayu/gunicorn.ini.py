@@ -46,7 +46,7 @@ bind = '0.0.0.0:' + environ.get('PORT', '8091')
 #       A positive integer. Generally set in the 1-5 seconds range.
 #
 
-workers = 2
+workers = 17
 
 #   Logging
 #   logfile - The path to a log file to write to.
@@ -56,6 +56,6 @@ workers = 2
 #
 
 errorlog = '/tmp/error.log'
-loglevel = 'info'
+loglevel = 'debug'
 accesslog = '/tmp/access.log'
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
