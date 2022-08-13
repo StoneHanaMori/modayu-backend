@@ -6,13 +6,23 @@ services:
     build: ./modayu
     command: gunicorn modayu.wsgi:application -c gunicorn.ini.py
     ports:
-      - "8090:8090"
+      - "8091:8091"
     volumes:
       - ./modayu:/app
-      - ./compose/gunicorn:/tmp # 挂载uwsgi日志
+      - ./compose/gunicorn/web:/tmp # 挂载uwsgi日志
+    links:
+      - db
     depends_on:
       - db
-    # runtime: nvidia
+
+  inference:
+    build: ./inference
+    command: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8092
+    ports:
+      - "8092:8092"
+    volumes:
+      - ./inference:/app
+      - ./compose/gunicorn/inference:/tmp
     deploy:
       resources:
         reservations:
@@ -20,6 +30,7 @@ services:
             - driver: "nvidia"
               count: "all"
               capabilities: [gpu]
+              
   db:
     image: mysql:8.0.28
     environment:
@@ -27,13 +38,24 @@ services:
       - MYSQL_DATABASE=modayu # 数据库名称
       - MYSQL_USER=modayu # 数据库用户名
       - MYSQL_PASSWORD=123456 # 用户密码
-
     volumes:
       - ./compose/mysql/data:/var/lib/mysql # 挂载数据库数据, 可读可写
-      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.cnf # 挂载配置文件
-
-
+      - ./compose/mysql/conf/my.cnf:/etc/mysql/my.cnf 
     ports:
        - "3306:3306"
+    restart: always
 
+  nginx:
+    build: ./compose/nginx
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./compose/nginx/log:/var/log/nginx # 挂载日志
+      - ./compose/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro # 挂载配置文件
+    links:
+       - web
+       - inference
+    depends_on:
+       - web
+       - inference
     restart: always

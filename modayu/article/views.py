@@ -2,28 +2,28 @@ from django.db.models import Q
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from deploy.predict import ArticleGenerator
+# from deploy.predict import ArticleGenerator
 from article.models import Article
 from article.serializers import ArticleSerializer
 import json
 # Create your views here.
 
-@api_view(['POST'])
-def generate(request):
-    content = request.data.get("content", None)
-    model_type = request.data.get("model_type", None)
-    if content is None:
-        return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
-    articleGenerator = ArticleGenerator(content)
-    title = articleGenerator.generate_title(model_type).replace(" ",'')
-    summary = articleGenerator.generate_summary()
-    keywords = articleGenerator.generate_keywords()
+# @api_view(['POST'])
+# def generate(request):
+#     content = request.data.get("content", None)
+#     model_type = request.data.get("model_type", None)
+#     if content is None:
+#         return Response(data = {"detail" : "lack of content"}, status = status.HTTP_400_BAD_REQUEST)
+#     articleGenerator = ArticleGenerator(content)
+#     title = articleGenerator.generate_title(model_type).replace(" ",'')
+#     summary = articleGenerator.generate_summary()
+#     keywords = articleGenerator.generate_keywords()
     
-    serialize_data = {  "title" : title, 
-                        "content" : content,
-                        "summary" : summary,
-                        "keywords" : keywords}
-    return Response(data=serialize_data, status=status.HTTP_200_OK)
+#     serialize_data = {  "title" : title, 
+#                         "content" : content,
+#                         "summary" : summary,
+#                         "keywords" : keywords}
+#     return Response(data=serialize_data, status=status.HTTP_200_OK)
 
 
 

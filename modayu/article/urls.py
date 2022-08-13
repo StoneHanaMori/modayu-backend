@@ -7,6 +7,6 @@ app_name = 'article'
 router = DefaultRouter()
 router.register(r'', ArticleViewSet)
 urlpatterns = [
-    path('generate', views.generate, name='generate'),
+    # path('generate', views.generate, name='generate'),
     path('', include(router.urls))
 ]
